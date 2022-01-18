@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>todoList</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.14/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <todo-list></todo-list>
+    </div>
+
+    <script>
+        Vue.component('todo-item',{
+            props: ['xyz'],
+            template: `<li>{{xyz}}</li>`,
+        });
+        Vue.component('todo-input',{
+            data(){
+                return {
+                    task: '',
+                };
+            },
+            methods: {
+                submitData(){
+                    this.$emit('abc', this.task);
+                    this.task = '';
+                },
+            },
+            template: `
+                <form @submit.prevent="submitData">
+                    <input v-model="task">
+                    <button> Submit </button>
+                </form>
+            `,
+        });
+
+        Vue.component('todo-list',{
+            data(){
+                return {
+                    tasks: [],
+                };
+            },
+            methods: {
+                addTask(item){
+                    this.tasks.push(item);
+                },
+            },
+            template: `
+                <div>
+                    <todo-input @abc="addTask"></todo-input>
+
+                    <ol>
+                        <todo-item v-for="task in tasks" v-bind:xyz="task"></todo-item>
+                    </ol>
+                </div>
+            `,
+        });
+
+        new Vue({
+            el: '#app',
+        });
+    </script>
+</body>
+</html>
